@@ -429,6 +429,12 @@ export async function updateVariables() {
 		presetSelector: this.state.presetSelector,
 		lastPresetUsed: this.state.lastPresetUsed,
 		viscaId: this.state.viscaId - 0x80,
+		panLimit: this.state.panLimit,
+		tiltLimit: this.state.tiltLimit,
+		panStatus: this.state.panStatus,
+		tiltStatus: this.state.tiltStatus,
+		panTiltOperatingStatus: this.state.panTiltOperatingStatus,
+		panTiltInitializationStatus: this.state.panTiltInitializationStatus,
 		// Block 097e7e00 — Lens Control
 		zoomPosition: this.state.zoomPosition,
 		focusPosition: this.state.focusPosition,
