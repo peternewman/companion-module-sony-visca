@@ -51,6 +51,12 @@ class SonyVISCAInstance extends InstanceBase {
 			basisBrightnessLevel: 7,
 			viscaId: this.config.id,
 			presetSelector: 64,
+			panLimit: 'Unknown',
+			tiltLimit: 'Unknown',
+			panStatus: 'Unknown',
+			tiltStatus: 'Unknown',
+			panTiltOperatingStatus: 'Unknown',
+			panTiltInitializationStatus: 'Unknown',
 		}
 		this.speed = { pan: 0x0c, tilt: 0x0c, zoom: 1, focus: 1 }
 		this.tallyKeepaliveTimers = {}
@@ -291,6 +297,76 @@ class SonyVISCAInstance extends InstanceBase {
 					this.checkFeedbacks()
 				}
 			}
+		}
+		// CAM_PanTiltStatusInq: 8x 09 06 10 FF
+		// Standard: y0 50 pp pp FF         ( 2 bytes, 5 bytes)
+		callbacks['090610'] = (payload) => {
+			if (payload[1] !== 0x50) return
+			let initializingRaw, operatingRaw, tiltRaw, panRaw, limitRaw
+			if (payload.length >= 5) {
+				// FR7: 2 bytes
+				initializingRaw = (payload[2] & 0x30) >> 4
+				operatingRaw = (payload[2] & 0xc) >> 2
+				tiltRaw = payload[2] & 0x3
+				panRaw = (payload[3] & 0x30) >> 4
+				limitRaw = payload[3] & 0x8f
+				this.log('info', payload.toString('hex'))
+				this.log('info', 'Init: ' + initializingRaw.toString(2))
+				this.log('info', 'Operate: ' + operatingRaw.toString(2))
+				this.log('info', 'Tilt: ' + tiltRaw.toString(2))
+				this.log('info', 'Pan: ' + panRaw.toString(2))
+				this.log('info', 'Limit: ' + limitRaw.toString(2))
+			} else {
+				return
+			}
+			switch (panRaw) {
+				case 0x00:
+					this.state.panStatus = 'Pan functioning normally'
+				case 0x01:
+					this.state.panStatus = 'Pan sensor issue'
+				case 0x02:
+					this.state.panStatus = 'Pan mechanism issue'
+				default:
+					this.state.panStatus = 'Unknown'
+			}
+			switch (tiltRaw) {
+				case 0x00:
+					this.state.tiltStatus = 'Tilt functioning normally'
+				case 0x01:
+					this.state.tiltStatus = 'Tilt sensor issue'
+				case 0x02:
+					this.state.tiltStatus = 'Tilt mechanism issue'
+				default:
+					this.state.tiltStatus = 'Unknown'
+			}
+			switch (operatingRaw) {
+				case 0x00:
+					this.state.panTiltOperatingStatus = 'No movement'
+				case 0x01:
+					this.state.panTiltOperatingStatus = 'Pan/Tilt operating'
+				case 0x02:
+					this.state.panTiltOperatingStatus = 'Pan/Tilt operation complete'
+				case 0x03:
+					this.state.panTiltOperatingStatus = 'Pan/Tilt operating failed'
+				default:
+					this.state.panTiltOperatingStatus = 'Unknown'
+			}
+			switch (initializingRaw) {
+				case 0x00:
+					this.state.panTiltInitializationStatus = 'Not initialized'
+				case 0x01:
+					this.state.panTiltInitializationStatus = 'Initializing'
+				case 0x02:
+					this.state.panTiltInitializationStatus = 'Initialization complete'
+				case 0x03:
+					this.state.panTiltInitializationStatus = 'Initialization failed'
+				default:
+					this.state.panTiltInitializationStatus = 'Unknown'
+			}
+			// this.state.panLimit = 'Unknown'
+			// this.state.tiltLimit = 'Unknown'
+			this.updateVariables()
+			this.checkFeedbacks()
 		}
 		// CAM_PanTiltPosInq: 8x 09 06 12 FF
 		// Standard: y0 50 0p 0p 0p 0p 0t 0t 0t 0t FF         (4+4 nibble, 10 bytes)

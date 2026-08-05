@@ -273,6 +273,13 @@ const variables = [
 	{ variableId: 'zoomPositionBar', name: 'Zoom Position Bar' },
 	{ variableId: 'focusPositionBar', name: 'Focus Position Bar' },
 	{ variableId: 'irisPositionBar', name: 'Iris Position Bar' },
+	// Pan/Tilt status
+	{ variableId: 'panLimit', name: 'Pan Limit' },
+	{ variableId: 'tiltLimit', name: 'Tilt Limit' },
+	{ variableId: 'panStatus', name: 'Pan Status' },
+	{ variableId: 'tiltStatus', name: 'Tilt Status' },
+	{ variableId: 'panTiltOperatingStatus', name: 'Pan/Tilt Operating Status' },
+	{ variableId: 'panTiltInitializationStatus', name: 'Pan/Tilt Initialization Status' },
 	// Block 097e7e00 — Lens Control
 	{ variableId: 'zoomPosition', name: 'Zoom Position', block: '097e7e00' },
 	{ variableId: 'focusPosition', name: 'Focus Position', block: '097e7e00' },
