@@ -322,44 +322,58 @@ class SonyVISCAInstance extends InstanceBase {
 			switch (panRaw) {
 				case 0x00:
 					this.state.panStatus = 'Pan functioning normally'
+					break
 				case 0x01:
 					this.state.panStatus = 'Pan sensor issue'
+					break
 				case 0x02:
 					this.state.panStatus = 'Pan mechanism issue'
+					break
 				default:
 					this.state.panStatus = 'Unknown'
 			}
 			switch (tiltRaw) {
 				case 0x00:
 					this.state.tiltStatus = 'Tilt functioning normally'
+					break
 				case 0x01:
 					this.state.tiltStatus = 'Tilt sensor issue'
+					break
 				case 0x02:
 					this.state.tiltStatus = 'Tilt mechanism issue'
+					break
 				default:
 					this.state.tiltStatus = 'Unknown'
 			}
 			switch (operatingRaw) {
 				case 0x00:
 					this.state.panTiltOperatingStatus = 'No movement'
+					break
 				case 0x01:
 					this.state.panTiltOperatingStatus = 'Pan/Tilt operating'
+					break
 				case 0x02:
 					this.state.panTiltOperatingStatus = 'Pan/Tilt operation complete'
+					break
 				case 0x03:
 					this.state.panTiltOperatingStatus = 'Pan/Tilt operating failed'
+					break
 				default:
 					this.state.panTiltOperatingStatus = 'Unknown'
 			}
 			switch (initializingRaw) {
 				case 0x00:
 					this.state.panTiltInitializationStatus = 'Not initialized'
+					break
 				case 0x01:
 					this.state.panTiltInitializationStatus = 'Initializing'
+					break
 				case 0x02:
 					this.state.panTiltInitializationStatus = 'Initialization complete'
+					break
 				case 0x03:
 					this.state.panTiltInitializationStatus = 'Initialization failed'
+					break
 				default:
 					this.state.panTiltInitializationStatus = 'Unknown'
 			}
